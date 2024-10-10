@@ -1,18 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Peserta;
+namespace App\Http\Controllers\Peserta\Krenova;
 
 use App\Http\Controllers\Controller;
+use App\Models\FormKrenova;
+use App\Models\FormKrenovaDraft;
 use Illuminate\Http\Request;
 
-class Dashboard extends Controller
+class DaftarDraftInovasi extends Controller
 {
+
+    public  $title = 'Krenova';
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('peserta.dashboard.index');
+        $title = $this->title;
+        $inovasi = FormKrenovaDraft::where('user_id', '1')->latest()->get();
+        $title_page = 'Daftar Draft Inovasi';
+        return view('peserta.krenova.daftar-draft-inovasi', compact('title', 'title_page', 'inovasi'));
     }
 
     /**
@@ -60,6 +68,9 @@ class Dashboard extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        FormKrenova::where('id', $id)->delete();
+        FormKrenovaDraft::where('id', $id)->delete();
+
+        return redirect()->back();
     }
 }

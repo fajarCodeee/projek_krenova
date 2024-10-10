@@ -18,9 +18,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'fullname',
         'email',
         'password',
+        'number_phone',
+        'address',
+        'province',
+        'regency',
+        'subdistrict',
+        'village'
     ];
 
     /**
@@ -42,4 +48,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function hasFormKrenova()
+    {
+        return $this->hasMany(FormKrenova::class);
+    }
+
+    public function hasFormKrenovaDraft()
+    {
+        return $this->hasMany(FormKrenovaDraft::class);
+    }
+
+    public function hasFormPenelitianDaerah()
+    {
+        return $this->hasMany(FormPenelitianDaerah::class);
+    }
+
+    public function hasFormPenelitianDaerahDraft()
+    {
+        return $this->hasMany(FormPenelitianDaerahDraft::class);
+    }
 }

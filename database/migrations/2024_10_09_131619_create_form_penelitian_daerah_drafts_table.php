@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('form_penelitian_daerah_drafts', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('number_phone');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('research_title');
+            $table->string('research_location');
+            $table->string('institution');
+            $table->string('abstraction');
             $table->text('address');
             $table->string('province');
             $table->string('regency');
             $table->string('subdistrict');
             $table->string('village');
-            $table->rememberToken();
+            $table->enum('status', ['1', '2', '3'])->default('1');
+            $table->string('information')->nullable();
+
             $table->timestamps();
         });
     }
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('form_penelitian_daerah_drafts');
     }
 };
