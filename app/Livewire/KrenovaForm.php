@@ -6,10 +6,8 @@ use Carbon\Carbon;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Livewire\Component;
-use App\Models\FormKrenova;
 use Livewire\WithFileUploads;
 use App\Models\FormKrenovaDraft;
-use Illuminate\Support\Facades\Http;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class KrenovaForm extends Component
@@ -29,11 +27,14 @@ class KrenovaForm extends Component
     public $provinces = [];
     public $regences = null;
     public $subdistricts = null;
+    public $villages = null;
 
     public $form_id = null;
 
     public function mount()
     {
+        $user = User::find('1');
+
         $this->loadProfile();
         $this->getProvinceName();
 
@@ -47,8 +48,15 @@ class KrenovaForm extends Component
             $this->loadSubdistrictName($this->regency);
         }
 
+        if ($this->subdistrict != null) {
+            $this->loadVillageName($this->subdistrict);
+        }
+
         if (!is_null($this->form_id)) {
-            $form = FormKrenovaDraft::with('user')->where('id', $this->form_id)->first();
+            $form = $user->hasFormKrenovaDraft()->where('id', $this->form_id)->first();
+            if (is_null($form)) {
+                $form = $user->hasFormKrenova()->where('id', $this->form_id)->first();
+            }
             $this->innovation_title = $form->innovation_title;
             $this->category_competition = $form->competition_category;
             $this->participant_category = $form->participant_category;
@@ -83,6 +91,15 @@ class KrenovaForm extends Component
         $client = new Client();
         $response = $client->request('GET', $url);
         $this->subdistricts = json_decode($response->getBody(), true);
+    }
+
+    public function loadVillageName($subdistrict_code)
+    {
+        $url = 'https://wilayah.id/api/villages/' . $subdistrict_code . '.json';
+
+        $client = new Client();
+        $response = $client->request('GET', $url);
+        $this->villages = json_decode($response->getBody(), true);
     }
 
     public function loadProfile()

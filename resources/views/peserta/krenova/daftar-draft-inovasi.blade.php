@@ -19,6 +19,11 @@
     </div>
 
     {{-- table --}}
+    @if (session('success'))
+        <div class="alert alert-success">
+            {!! session('success') !!}
+        </div>
+    @endif
 
     <div class="card">
         <div class="card-header">
@@ -41,7 +46,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($inovasi as $key => $list)
+                        @if ($inovasi_revisi != null)
+                            @foreach ($inovasi_revisi as $key => $list)
+                                <tr>
+                                    <td>{{ ++$key }}</td>
+                                    <td>{{ $list->innovation_title }}</td>
+                                    <td>{{ $list->participant_category }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($list->created_at)->translatedFormat('d F Y') }}</td>
+                                    {{-- <td>{{ $list->status == 1 ? 'Menunggu Konfirmasi' : '' }}</td> --}}
+                                    <td>{{ $list->information }}</td>
+                                    <td>
+                                        <a href="{{ route('peserta.krenova.edit.daftar-inovasi', ['id' => $list->id]) }}"
+                                            class="btn btn-sm"><i class='bx bx-edit-alt bg-warning px-1 rounded'></i></a>
+                                        <a href="{{ route('peserta.krenova.delete.draft-inovasi', ['id' => $list->id]) }}"
+                                            class="btn btn-sm" data-confirm-delete="true"><i
+                                                class='bx bx-trash bg-danger rounded px-1' style="color: #fff"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+
+                        @forelse ($inovasi_draft as $key => $list)
                             <tr>
                                 <td>{{ ++$key }}</td>
                                 <td>{{ $list->innovation_title }}</td>
@@ -53,13 +78,13 @@
                                     <a href="{{ route('peserta.krenova.edit.daftar-inovasi', ['id' => $list->id]) }}"
                                         class="btn btn-sm"><i class='bx bx-edit-alt bg-warning px-1 rounded'></i></a>
                                     <a href="{{ route('peserta.krenova.delete.draft-inovasi', ['id' => $list->id]) }}"
-                                        class="btn btn-sm"><i class='bx bx-trash bg-danger rounded px-1'
-                                            style="color: #fff"></i></a>
+                                        class="btn btn-sm" data-confirm-delete="true"><i
+                                            class='bx bx-trash bg-danger rounded px-1' style="color: #fff"></i></a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td>Not Found</td>
+                                <td colspan="6" class="text-center">Not Found</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -89,4 +114,5 @@
                 .appendTo('#example2_wrapper .col-md-6:eq(0)');
         });
     </script>
+    @include('sweetalert::alert')
 @endpush

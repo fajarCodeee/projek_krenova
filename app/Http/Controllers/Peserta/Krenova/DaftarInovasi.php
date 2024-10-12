@@ -18,7 +18,9 @@ class DaftarInovasi extends Controller
     public function index()
     {
         $title = $this->title;
-        $inovasi = FormKrenova::where('user_id', '1')->latest()->get();
+        $inovasi = FormKrenova::where('user_id', '1')
+            ->where('status', '1')
+            ->latest()->get();
         $title_page = 'Daftar Inovasi';
         return view('peserta.krenova.daftar-inovasi', compact('title', 'title_page', 'inovasi'));
     }

@@ -93,9 +93,10 @@
                     <select class="form-select @error('subdistrict')
             is-invalid
             @enderror"
-                        aria-label="Default select example" wire:model="subdistrict" id="subdistrict">
+                        aria-label="Default select example" wire:model="subdistrict" id="subdistrict"
+                        wire:change="loadVillageName($event.target.value)">
                         @if (!is_null($subdistricts))
-                            <option selected value=""> --- Pilih Kelurahan --- </option>
+                            <option selected value=""> --- Pilih Kecamatan --- </option>
                             @forelse ($subdistricts['data'] as $subdistrict)
                                 {{-- <option value="{{ $subdistrict['code'] }}">{{ $subdistrict['name'] }}</option> --}}
                                 <option value="{{ $subdistrict['code'] }}"
@@ -115,14 +116,31 @@
                 </div>
                 <div class="mb-3">
                     <label for="village" class="form-label">Kelurahan <span class="text-danger">*</span></label>
-                    <input type="text"
-                        class="form-control @error('village')
-                is-invalid
-            @enderror"
-                        id="village" wire:model="village" required>
-                    @error('village')
+                    <select
+                        class="form-select @error('village')
+                        is-invalid
+                        @enderror"
+                        aria-label="Default select example" wire:model="village" id="village">
+                        @if (!is_null($villages))
+                            <option selected value=""> --- Pilih Kelurahan --- </option>
+                            @forelse ($villages['data'] as $village)
+                                {{-- <option value="{{ $village['code'] }}">{{ $village['name'] }}</option> --}}
+                                <option value="{{ $village['code'] }}"
+                                    {{ $village['code'] == $this->village ? 'selected' : '' }}>
+                                    {{ $village['name'] }}
+                                </option>
+
+                            @empty
+                            @endforelse
+                        @else
+                            <option selected value=""> --- Pilih Kecamatan Terlebih Dahulu ---
+                            </option>
+                        @endif
+                    </select>
+                    @error('subdistrict')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
+
                 </div>
                 <div class="mb-3">
                     <label for="number_phone" class="form-label">No. Telepon <span class="text-danger">*</span></label>

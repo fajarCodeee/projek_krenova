@@ -45,7 +45,6 @@
                             <th>No</th>
                             <th>Judul Inovasi</th>
                             <th>Institusi</th>
-                            <th>Lokasi Riset</th>
                             <th>Tanggal dibuat </th>
                             <th>Status</th>
                             <th>Ket</th>
@@ -63,14 +62,23 @@
 
                                 <td>{{ $penelitian->research_title }}</td>
                                 <td>{{ $penelitian->institution }}</td>
-                                <td>{{ $penelitian->research_location }}</td>
                                 <td>{{ \Carbon\Carbon::parse($penelitian->created_at)->translatedFormat('d F Y') }}</td>
-                                <td>{{ $penelitian->status == '1' ? 'Menunggu Konfimasi' : 'Meminta Revisi' }}</td>
+                                <td>
+                                    @if ($penelitian->status == '1')
+                                        Menunggu Konfirmasi
+                                    @elseif ($penelitian->status == '2')
+                                        Dilombakan
+                                    @else
+                                        Meminta Revisi
+                                    @endif
+                                </td>
                                 <td>{{ $penelitian->information }}</td>
                                 <td>
                                     <a href="{{ route('peserta.penelitian.show.daftar-penelitian-daerah', ['id' => $penelitian->id]) }}"
                                         class="btn btn-sm {{ $penelitian->status == '3' ? 'btn-warning' : 'btn-secondary' }}">{{ $penelitian->status == '3' ? 'Edit' : 'Detail' }}</a>
-                                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                                    <a href="{{ route('peserta.penelitian.delete.daftar-penelitian-daerah', ['id' => $penelitian->id]) }}"
+                                        class="btn btn-sm btn-danger {{ $penelitian->status != '3' ? 'd-none' : '' }}"
+                                        data-confirm-delete="true">Delete</a>
                                 </td>
                             </tr>
                         @empty
@@ -91,15 +99,5 @@
             $('#example').DataTable();
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            var table = $('#example2').DataTable({
-                lengthChange: false,
-                buttons: ['copy', 'excel', 'pdf', 'print']
-            });
-
-            table.buttons().container()
-                .appendTo('#example2_wrapper .col-md-6:eq(0)');
-        });
-    </script>
+    @include('sweetalert::alert')
 @endpush

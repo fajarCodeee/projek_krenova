@@ -142,11 +142,11 @@
                             @enderror
 
                         </div>
-                        {{-- <x-input-field label="Kelurahan" model="village" /> --}}
                     </div>
                 </div>
-
-                <button class="btn btn-primary" type="submit">Submit</button>
+                @if (!$is_edit == false)
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                @endif
             </form>
         </div>
     </div>

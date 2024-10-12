@@ -29,6 +29,7 @@ class Detail extends Component
     public $provinces = [];
     public $regences = null;
     public $subdistricts = null;
+    public $villages = null;
 
     public $form_id = null;
 
@@ -45,6 +46,10 @@ class Detail extends Component
         if ($this->regency) {
             // Jika ada kabupaten, muat kecamatan yang sesuai
             $this->loadSubdistrictName($this->regency);
+        }
+
+        if ($this->subdistrict != null) {
+            $this->loadVillageName($this->subdistrict);
         }
 
         if (!is_null($this->form_id)) {
@@ -90,6 +95,16 @@ class Detail extends Component
         $this->subdistricts = json_decode($response->getBody(), true);
     }
 
+    public function loadVillageName($subdistrict_code)
+    {
+        $url = 'https://wilayah.id/api/villages/' . $subdistrict_code . '.json';
+
+        $client = new Client();
+        $response = $client->request('GET', $url);
+        $this->villages = json_decode($response->getBody(), true);
+    }
+
+
     public function loadProfile()
     {
         $user = User::find('1');
@@ -131,10 +146,6 @@ class Detail extends Component
     // render view
     public function render()
     {
-        return view('livewire.krenova.detail', [
-            'provinces' => $this->provinces,
-            'regences' => $this->regences,
-            'subdistricts' => $this->subdistricts,
-        ]);
+        return view('livewire.krenova.detail');
     }
 }

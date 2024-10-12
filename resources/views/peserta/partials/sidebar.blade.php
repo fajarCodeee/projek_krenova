@@ -14,7 +14,8 @@
         </a>
         <ul>
             <li>
-                <a href="#"><i class="bx bx-right-arrow-alt"></i>Daftar
+                <a href="{{ route('peserta.krenova.approve.daftar-inovasi') }}"><i
+                        class="bx bx-right-arrow-alt"></i>Daftar
                     Inovasi</a>
             </li>
             <li class="{{ Route::is('peserta.krenova.create.daftar-inovasi') ? 'mm-active' : '' }}"> <a
@@ -36,15 +37,17 @@
         </a>
         <ul>
             <li>
-                <a href="#"><i class="bx bx-right-arrow-alt"></i>Daftar
+                <a href="{{ route('peserta.penelitian.daftar-penelitian-daerah') }}"><i
+                        class="bx bx-right-arrow-alt"></i>Daftar
                     Penelitian</a>
             </li>
             <li>
-                <a href="{{ route('peserta.penelitian.daftar-penelitian-daerah') }}"><i
+                <a href="{{ route('peserta.penelitian.pending.daftar-penelitian-daerah') }}"><i
                         class="bx bx-right-arrow-alt"></i>Menunggu Verifikasi</a>
             </li>
             <li>
-                <a href="#"><i class="bx bx-right-arrow-alt"></i>Draft</a>
+                <a href="{{ route('peserta.penelitian.revisi.daftar-penelitian-daerah') }}"><i
+                        class="bx bx-right-arrow-alt"></i>Meminta Revisi</a>
             </li>
         </ul>
     </li>

@@ -32,6 +32,14 @@ class FormCreate extends Component
     {
         $user = User::find('1');
 
+        if ($this->province != null) {
+            $this->loadRegencyName($this->province);
+        }
+
+        if ($this->regency != null) {
+            $this->loadSubdistrictName($this->regency);
+        }
+
         $this->loadProfile();
         $this->getProvinceName();
 
@@ -47,7 +55,6 @@ class FormCreate extends Component
 
             $this->subdistrict = $form->subdistrict;
             $this->village = $form->village;
-
             $this->research_title = $form->research_title;
             $this->regency = $form->regency;
             $this->institution = $form->institution;
@@ -55,21 +62,12 @@ class FormCreate extends Component
             $this->address = $form->address;
 
             $this->proposal_penelitian = $form->getFirstMediaUrl('proposal_penelitian');
+
+            if ($this->subdistrict) {
+                $this->loadVillageName($this->subdistrict);
+            }
         } else {
             $this->is_edit = true;
-        }
-
-
-        if ($this->province != null) {
-            $this->loadRegencyName($this->province);
-        }
-
-        if ($this->regency != null) {
-            $this->loadSubdistrictName($this->regency);
-        }
-
-        if ($this->subdistrict != null) {
-            $this->loadVillageName($this->subdistrict);
         }
     }
 
@@ -143,6 +141,6 @@ class FormCreate extends Component
                 ->toMediaCollection('proposal_penelitian');
         }
 
-        return redirect()->route('peserta.penelitian.daftar-penelitian-daerah')->with('success', 'Berhasil menambahkan! <b>Menunggu Verifikasi</b>');
+        return redirect()->route('peserta.penelitian.pending.daftar-penelitian-daerah')->with('success', 'Berhasil menambahkan! <b>Menunggu Verifikasi</b>');
     }
 }

@@ -54,7 +54,15 @@
                                 <td>{{ $list->innovation_title }}</td>
                                 <td>{{ $list->participant_category }}</td>
                                 <td>{{ \Carbon\Carbon::parse($list->created_at)->translatedFormat('d F Y') }}</td>
-                                <td>{{ $list->status == 1 ? 'Menunggu Konfirmasi' : '' }}</td>
+                                <td>{{ $list->status == 1 ? 'Menunggu Konfirmasi' : '' }}
+                                    @if ($list->status == 1)
+                                        Menunggu Konfirmasi
+                                    @elseif ($list->status == 2)
+                                        Dilombakan
+                                    @else
+                                        Meminta Revisi
+                                    @endif
+                                </td>
                                 <td>{{ $list->information }}</td>
                                 <td>
                                     <a href="{{ route('peserta.krenova.show.daftar-inovasi', ['id' => $list->id]) }}"
@@ -63,7 +71,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td>Not Found</td>
+                                <td colspan="7" class="text-center">Not Found</td>
                             </tr>
                         @endforelse
                     </tbody>
