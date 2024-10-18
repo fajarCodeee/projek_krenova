@@ -39,11 +39,11 @@
                             @enderror"
                                 aria-label="Default select example" wire:model="province" id="province" disabled>
                                 <option selected value=""> --- Pilih Provinsi --- </option>
-                                @foreach ($provinces['data'] as $prov)
-                                    {{-- <option value="{{ $prov['code'] }}">{{ $prov['name'] }}</option> --}}
-                                    <option value="{{ $prov['code'] }}"
-                                        {{ $prov['code'] == $province ? 'selected' : '' }}>
-                                        {{ $prov['name'] }}
+                                @foreach ($provinces as $prov)
+                                    {{-- <option value="{{ $prov['kode'] }}">{{ $prov['nama'] }}</option> --}}
+                                    <option value="{{ $prov['kode'] }}"
+                                        {{ $prov['kode'] == $province ? 'selected' : '' }}>
+                                        {{ $prov['nama'] }}
                                     </option>
                                 @endforeach
                             </select>
@@ -62,11 +62,11 @@
                                 aria-label="Default select example" wire:model.defer="regency" id="regency" disabled>
                                 @if (!is_null($regences))
                                     <option selected value=""> --- Pilih Kabupaten / Kota --- </option>
-                                    @forelse ($regences['data'] as $regency)
-                                        {{-- <option value="{{ $regency['code'] }}">{{ $regency['name'] }}</option> --}}
-                                        <option value="{{ $regency['code'] }}"
-                                            {{ $regency['code'] == $this->regency ? 'selected' : '' }}>
-                                            {{ $regency['name'] }}
+                                    @forelse ($regences as $regency)
+                                        {{-- <option value="{{ $regency['kode'] }}">{{ $regency['nama'] }}</option> --}}
+                                        <option value="{{ $regency['kode'] }}"
+                                            {{ $regency['kode'] == $this->regency ? 'selected' : '' }}>
+                                            {{ $regency['nama'] }}
                                         </option>
 
                                     @empty
@@ -92,11 +92,11 @@
                                 @if ($is_edit == false) disabled @endif>
                                 @if (!is_null($subdistricts))
                                     <option selected value=""> --- Pilih Kecamatan --- </option>
-                                    @forelse ($subdistricts['data'] as $subdistrict)
-                                        {{-- <option value="{{ $subdistrict['code'] }}">{{ $subdistrict['name'] }}</option> --}}
-                                        <option value="{{ $subdistrict['code'] }}"
-                                            {{ $subdistrict['code'] == $this->subdistrict ? 'selected' : '' }}>
-                                            {{ $subdistrict['name'] }}
+                                    @forelse ($subdistricts as $subdistrict)
+                                        {{-- <option value="{{ $subdistrict['kode'] }}">{{ $subdistrict['nama'] }}</option> --}}
+                                        <option value="{{ $subdistrict['kode'] }}"
+                                            {{ $subdistrict['kode'] == $this->subdistrict ? 'selected' : '' }}>
+                                            {{ $subdistrict['nama'] }}
                                         </option>
 
                                     @empty
@@ -123,11 +123,11 @@
                                 @if ($is_edit == false) disabled @endif>
                                 @if (!is_null($villages))
                                     <option selected value=""> --- Pilih Kelurahan --- </option>
-                                    @forelse ($villages['data'] as $village)
-                                        {{-- <option value="{{ $village['code'] }}">{{ $village['name'] }}</option> --}}
-                                        <option value="{{ $village['code'] }}"
-                                            {{ $village['code'] == $this->village ? 'selected' : '' }}>
-                                            {{ $village['name'] }}
+                                    @forelse ($villages as $village)
+                                        {{-- <option value="{{ $village['kode'] }}">{{ $village['nama'] }}</option> --}}
+                                        <option value="{{ $village['kode'] }}"
+                                            {{ $village['kode'] == $this->village ? 'selected' : '' }}>
+                                            {{ $village['nama'] }}
                                         </option>
 
                                     @empty

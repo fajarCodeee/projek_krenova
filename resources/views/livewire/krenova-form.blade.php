@@ -41,6 +41,8 @@
                     @enderror
                 </div>
 
+                {{-- @dd($provinces) --}}
+
                 <div class="mb-3">
                     <label for="province" class="form-label">Provinsi <span class="text-danger">*</span></label>
                     <select
@@ -50,10 +52,10 @@
                         aria-label="Default select example" wire:model="province" id="province"
                         wire:change="loadRegencyName($event.target.value)">
                         <option selected value=""> --- Pilih Provinsi --- </option>
-                        @foreach ($provinces['data'] as $prov)
+                        @foreach ($provinces as $prov)
                             {{-- <option value="{{ $prov['code'] }}">{{ $prov['name'] }}</option> --}}
-                            <option value="{{ $prov['code'] }}" {{ $prov['code'] == $province ? 'selected' : '' }}>
-                                {{ $prov['name'] }}
+                            <option value="{{ $prov['kode'] }}" {{ $prov['kode'] == $province ? 'selected' : '' }}>
+                                {{ $prov['nama'] }}
                             </option>
                         @endforeach
                     </select>
@@ -71,11 +73,11 @@
                         wire:change="loadSubdistrictName($event.target.value)">
                         @if (!is_null($regences))
                             <option selected value=""> --- Pilih Kabupaten / Kota --- </option>
-                            @forelse ($regences['data'] as $regency)
+                            @forelse ($regences as $regency)
                                 {{-- <option value="{{ $regency['code'] }}">{{ $regency['name'] }}</option> --}}
-                                <option value="{{ $regency['code'] }}"
-                                    {{ $regency['code'] == $this->regency ? 'selected' : '' }}>
-                                    {{ $regency['name'] }}
+                                <option value="{{ $regency['kode'] }}"
+                                    {{ $regency['kode'] == $this->regency ? 'selected' : '' }}>
+                                    {{ $regency['nama'] }}
                                 </option>
 
                             @empty
@@ -97,11 +99,11 @@
                         wire:change="loadVillageName($event.target.value)">
                         @if (!is_null($subdistricts))
                             <option selected value=""> --- Pilih Kecamatan --- </option>
-                            @forelse ($subdistricts['data'] as $subdistrict)
+                            @forelse ($subdistricts as $subdistrict)
                                 {{-- <option value="{{ $subdistrict['code'] }}">{{ $subdistrict['name'] }}</option> --}}
-                                <option value="{{ $subdistrict['code'] }}"
-                                    {{ $subdistrict['code'] == $this->subdistrict ? 'selected' : '' }}>
-                                    {{ $subdistrict['name'] }}
+                                <option value="{{ $subdistrict['kode'] }}"
+                                    {{ $subdistrict['kode'] == $this->subdistrict ? 'selected' : '' }}>
+                                    {{ $subdistrict['nama'] }}
                                 </option>
 
                             @empty
@@ -123,11 +125,11 @@
                         aria-label="Default select example" wire:model="village" id="village">
                         @if (!is_null($villages))
                             <option selected value=""> --- Pilih Kelurahan --- </option>
-                            @forelse ($villages['data'] as $village)
+                            @forelse ($villages as $village)
                                 {{-- <option value="{{ $village['code'] }}">{{ $village['name'] }}</option> --}}
-                                <option value="{{ $village['code'] }}"
-                                    {{ $village['code'] == $this->village ? 'selected' : '' }}>
-                                    {{ $village['name'] }}
+                                <option value="{{ $village['kode'] }}"
+                                    {{ $village['kode'] == $this->village ? 'selected' : '' }}>
+                                    {{ $village['nama'] }}
                                 </option>
 
                             @empty
@@ -230,8 +232,8 @@
                         aria-label="Default select example" wire:model="participant_category"
                         id="participant_category">
                         <option selected value=""> --- Pilih Kategori Peserta --- </option>
-                        <option value="Masyarakat Umum">Masyarakat Umum</option>
-                        <option value="Pelajar / Mahasiswa / Dosen / Guru / PNS / TNI / Polri">Pelajar / Mahasiswa /
+                        <option value="umum">Masyarakat Umum</option>
+                        <option value="mahasiswa">Pelajar / Mahasiswa /
                             Dosen / Guru / PNS / TNI / Polri</option>
                     </select>
                     @error('participant_category')

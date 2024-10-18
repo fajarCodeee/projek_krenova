@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Wilayah;
 use Carbon\Carbon;
 use App\Models\User;
-use GuzzleHttp\Client;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\FormKrenovaDraft;
@@ -38,13 +38,12 @@ class KrenovaForm extends Component
         $this->loadProfile();
         $this->getProvinceName();
 
+
         if ($this->province) {
-            // Jika ada provinsi, muat kabupaten yang sesuai
             $this->loadRegencyName($this->province);
         }
 
         if ($this->regency) {
-            // Jika ada kabupaten, muat kecamatan yang sesuai
             $this->loadSubdistrictName($this->regency);
         }
 
@@ -70,36 +69,26 @@ class KrenovaForm extends Component
 
     public function getProvinceName()
     {
-        $client = new Client();
-        $response = $client->request('GET', 'https://wilayah.id/api/provinces.json');
-        $this->provinces = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->provinces = json_decode($locations->getProvinceName(), true);
     }
 
     public function loadRegencyName($prov_code)
     {
-        $url = 'https://wilayah.id/api/regencies/' . $prov_code . '.json';
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $this->regences = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->regences = json_decode($locations->getRegencyName($prov_code), true);
     }
 
     public function loadSubdistrictName($regency_code)
     {
-        $url = 'https://wilayah.id/api/districts/' . $regency_code . '.json';
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $this->subdistricts = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->subdistricts = json_decode($locations->getSubdistrictName($regency_code), true);
     }
 
     public function loadVillageName($subdistrict_code)
     {
-        $url = 'https://wilayah.id/api/villages/' . $subdistrict_code . '.json';
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $this->villages = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->villages = json_decode($locations->getVillageName($subdistrict_code), true);
     }
 
     public function loadProfile()
@@ -267,11 +256,11 @@ class KrenovaForm extends Component
         $nama_kota = '';
 
         if (!is_null($this->regences)) {
-            foreach ($this->regences['data'] as $regency) {
+            foreach ($this->regences as $regency) {
                 // dd($regency);
                 // $nama_kota = $this->regency == $regency['code'] ? $regency['name'] : '';
-                if ($regency['code'] == $this->regency) {
-                    $nama_kota = $regency['name'];
+                if ($regency['kode'] == $this->regency) {
+                    $nama_kota = $regency['nama'];
                 }
             }
             // dd($nama_kota);

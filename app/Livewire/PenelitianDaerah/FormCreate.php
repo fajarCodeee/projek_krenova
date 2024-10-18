@@ -4,6 +4,7 @@ namespace App\Livewire\PenelitianDaerah;
 
 use App\Models\User;
 use GuzzleHttp\Client;
+use App\Models\Wilayah;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -81,42 +82,28 @@ class FormCreate extends Component
         $this->email = $user->email ?? '';
     }
 
-    // get Provinces
     public function getProvinceName()
     {
-        $client = new Client();
-        $response = $client->request('GET', 'https://wilayah.id/api/provinces.json');
-        $this->provinces = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->provinces = json_decode($locations->getProvinceName(), true);
     }
 
-    // get regency name
     public function loadRegencyName($prov_code)
     {
-        $url = 'https://wilayah.id/api/regencies/' . $prov_code . '.json';
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $this->regences = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->regences = json_decode($locations->getRegencyName($prov_code), true);
     }
 
-    // load subdistricts name
     public function loadSubdistrictName($regency_code)
     {
-        $url = 'https://wilayah.id/api/districts/' . $regency_code . '.json';
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $this->subdistricts = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->subdistricts = json_decode($locations->getSubdistrictName($regency_code), true);
     }
 
-    // load village name
     public function loadVillageName($subdistrict_code)
     {
-        $url = 'https://wilayah.id/api/villages/' . $subdistrict_code . '.json';
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $this->villages = json_decode($response->getBody(), true);
+        $locations = new Wilayah();
+        return $this->villages = json_decode($locations->getVillageName($subdistrict_code), true);
     }
 
     public function submit()
