@@ -75,7 +75,7 @@ class KrenovaResource extends Resource
                     ->icon('heroicon-o-eye'),
             ])
             ->defaultSort('created_at', 'desc')
-            ->recordUrl(null);
+        ;
     }
     public static function getPages(): array
     {

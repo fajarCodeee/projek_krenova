@@ -21,7 +21,10 @@
                         <div class="input-group mb-3">
                             @if ($is_edit == true)
                                 <input type="file" class="form-control" id="proposal_penelitian"
-                                    accept="application/pdf" wire:model='proposal_penelitian'>
+                                    accept="application/pdf" wire:model='proposal_penelitian'
+                                    class="@error('proposal_penelitian')
+                                        is-invalid
+                                    @enderror">
                             @else
                                 <a href="{{ $proposal_penelitian }}" target="_blank">Lihat Dokumen <i
                                         class='bx bx-link-external'></i></a>

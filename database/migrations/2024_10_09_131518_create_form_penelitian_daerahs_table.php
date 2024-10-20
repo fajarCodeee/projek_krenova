@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('research_title');
             $table->string('research_location');
             $table->string('institution');
-            $table->string('abstraction');
+            $table->text('abstraction');
             $table->text('address');
             $table->string('province');
             $table->string('regency');

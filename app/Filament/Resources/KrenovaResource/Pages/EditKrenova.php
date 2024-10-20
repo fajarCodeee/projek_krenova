@@ -15,9 +15,13 @@ class EditKrenova extends EditRecord
 {
     protected static string $resource = KrenovaResource::class;
 
+    protected static ?string $title = "Detail Krenova";
+
+
     protected function getSaveFormAction(): \Filament\Actions\Action
     {
         return parent::getSaveFormAction()
+            ->disabled()
             ->hidden();
     }
 

@@ -17,4 +17,9 @@ class FormPenelitianDaerah extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('proposal_penelitian');
+    }
 }

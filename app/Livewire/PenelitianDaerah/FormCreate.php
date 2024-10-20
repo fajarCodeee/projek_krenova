@@ -110,10 +110,14 @@ class FormCreate extends Component
     {
         $user = User::find('1');
 
+        $this->validate([
+            'proposal_penelitian' => 'required', // Validasi file proposal
+        ]);
+
         $formPenelitian = $user->hasFormPenelitianDaerah()->updateOrCreate(['id' => $this->form_id], [
             'user_id' => $user->id,
             'research_title' => $this->research_title,
-            'research_location' => $this->regency,
+            'research_location' => $this->address,
             'address' => $this->address,
             'institution' => $this->institution,
             'abstraction' => $this->abstraction,
