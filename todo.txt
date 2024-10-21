@@ -1,5 +1,5 @@
 [TODO]
-- Membuat view untuk menampilkan dokument di form OPD
+- Membuat view untuk menampilkan dokumen di form OPD
 
 [FIX]
 - Menampilkan Proposal Penelitian
