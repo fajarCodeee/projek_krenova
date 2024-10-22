@@ -1,25 +1,40 @@
 <?php
 
-namespace App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource\Pages;
+namespace App\Filament\Resources;
 
+use App\Filament\Resources\InovasiPerangkatDaerahResource\Pages;
+use App\Filament\Resources\InovasiPerangkatDaerahResource\RelationManagers;
+use App\Models\FormInovasiPerangkatDaerah;
+use App\Models\InovasiPerangkatDaerah;
 use Filament\Forms;
-use Filament\Actions;
 use Filament\Forms\Form;
-use Illuminate\Support\Facades\Auth;
-use Filament\Resources\Pages\CreateRecord;
-use App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CreateFormInovasiPerangkatDaerah extends CreateRecord
+class InovasiPerangkatDaerahResource extends Resource
 {
-    protected static string $resource = FormInovasiPerangkatDaerahResource::class;
+    protected static ?string $model = FormInovasiPerangkatDaerah::class;
 
-    public function form(Form $form): Form
+    protected static ?string $navigationGroup = 'Perangkat Daerah';
+
+    protected static ?int $navigationSort = 5;
+
+    protected static ?string $modelLabel = 'Inovasi Perangkat Daerah';
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Hidden::make('user_id')
-                    ->default(Auth::user()->id)
-                    ->required(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'fullname')
+                    ->required()
+                    ->disabled()
+                    ->native(false),
                 Forms\Components\TextInput::make('innovation_name')
                     ->label('Nama Inovasi')
                     ->required()
@@ -102,6 +117,78 @@ class CreateFormInovasiPerangkatDaerah extends CreateRecord
                     ->label('Profil Bisnis (jika ada)')
                     ->collection('profil-bisnis')
                     ->acceptedFileTypes(['application/pdf']),
+                Forms\Components\ViewField::make('pdf_preview')
+                    ->label('Preview Anggaran')
+                    ->view('components.preview.anggaran', [
+                        'model' => $form->getModel(),
+                        'id' => $form->model->id,
+                    ]),
+                Forms\Components\ViewField::make('pdf_preview')
+                    ->label('Preview Profil Bisnis')
+                    ->view('components.preview.profile-bisnis', [
+                        'model' => $form->getModel(),
+                        'id' => $form->model->id,
+                    ]),
             ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('user.fullname')
+                    ->label('Nama Lengkap')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('innovation_name')
+                    ->label('Nama Inovasi')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('stage_of_innovation')
+                    ->label('Tahapan Inovasi')
+                    ->formatStateUsing(function ($state) {
+                        if ($state == 'uji-coba') {
+                            return 'Uji Coba';
+                        } else if ($state == 'penerapan') {
+                            return 'Penerapan';
+                        } else if ($state == 'inisiatif') {
+                            return 'Inisiatif';
+                        }
+                    }),
+                Tables\Columns\TextColumn::make('forms_of_regional_innovation')
+                    ->label('Bentuk Inovasi Daerah'),
+                Tables\Columns\TextColumn::make('trial_time')
+                    ->label('Waktu Uji Coba')
+                    ->date('d F Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('implementation_time')
+                    ->label('Waktu Penerapan Hasil')
+                    ->date('d F Y')
+                    ->sortable(),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->actions([
+                Tables\Actions\EditAction::make()
+                    ->label('Detail'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListInovasiPerangkatDaerahs::route('/'),
+            'create' => Pages\CreateInovasiPerangkatDaerah::route('/create'),
+            'edit' => Pages\EditInovasiPerangkatDaerah::route('/{record}/edit'),
+        ];
     }
 }

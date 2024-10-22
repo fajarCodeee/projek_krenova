@@ -104,13 +104,23 @@ class EditFormInovasiPerangkatDaerah extends EditRecord
                 Forms\Components\SpatieMediaLibraryFileUpload::make('anggaran')
                     ->label('Anggaran (jika ada)')
                     ->collection('anggaran')
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->columnSpanFull(),
+                    ->acceptedFileTypes(['application/pdf']),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('profil-bisnis')
                     ->label('Profil Bisnis (jika ada)')
                     ->collection('profil-bisnis')
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->columnSpanFull(),
+                    ->acceptedFileTypes(['application/pdf']),
+                Forms\Components\ViewField::make('pdf_preview')
+                    ->label('Preview Anggaran')
+                    ->view('components.preview.anggaran', [
+                        'model' => $form->getModel(),
+                        'id' => $form->model->id,
+                    ]),
+                Forms\Components\ViewField::make('pdf_preview')
+                    ->label('Preview Profil Bisnis')
+                    ->view('components.preview.profile-bisnis', [
+                        'model' => $form->getModel(),
+                        'id' => $form->model->id,
+                    ]),
             ]);
     }
 }
