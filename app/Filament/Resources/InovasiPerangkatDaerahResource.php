@@ -112,11 +112,13 @@ class InovasiPerangkatDaerahResource extends Resource
                 Forms\Components\SpatieMediaLibraryFileUpload::make('anggaran')
                     ->label('Anggaran (jika ada)')
                     ->collection('anggaran')
-                    ->acceptedFileTypes(['application/pdf']),
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->hiddenOn('edit'),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('profil-bisnis')
                     ->label('Profil Bisnis (jika ada)')
                     ->collection('profil-bisnis')
-                    ->acceptedFileTypes(['application/pdf']),
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->hiddenOn('edit'),
                 Forms\Components\ViewField::make('pdf_preview')
                     ->label('Preview Anggaran')
                     ->view('components.preview.anggaran', [
@@ -167,7 +169,8 @@ class InovasiPerangkatDaerahResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('Detail'),
+                    ->label('Detail'),  
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -176,11 +179,9 @@ class InovasiPerangkatDaerahResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
+    public static function canCreate(): bool
     {
-        return [
-            //
-        ];
+        return false;
     }
 
     public static function getPages(): array
