@@ -2,10 +2,13 @@
 
 namespace App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource\Pages;
 
-use Filament\Forms;
-use Filament\Actions;
-use Filament\Forms\Form;
+
+use Exception;
+use App\Models\Evaluasi;
+use App\Models\Kriteria;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource;
 
@@ -13,95 +16,55 @@ class CreateFormInovasiPerangkatDaerah extends CreateRecord
 {
     protected static string $resource = FormInovasiPerangkatDaerahResource::class;
 
-    public function form(Form $form): Form
+    protected function getRedirectUrl(): string
     {
-        return $form
-            ->schema([
-                Forms\Components\Hidden::make('user_id')
-                    ->default(Auth::user()->id)
-                    ->required(),
-                Forms\Components\TextInput::make('innovation_name')
-                    ->label('Nama Inovasi')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('stage_of_innovation')
-                    ->label('Tahapan Inovasi')
-                    ->options([
-                        'inisiatif' => 'Inisiatif',
-                        'penerapan' => 'Penerapan',
-                        'uji-coba' => 'Uji Coba'
-                    ])
-                    ->native(false)
-                    ->required(),
-                Forms\Components\Select::make('regional_innovation_initiator')
-                    ->label('Inisiator Inovasi Daerah')
-                    ->options([
-                        'kepala' => 'Kepala Daerah',
-                        'opd' => 'OPD',
-                        'asn' => 'ASN',
-                        'masyarakat' => 'Masyarakat',
-                        'dprd' => 'Anggota DPRD'
-                    ])
-                    ->native(false)
-                    ->required(),
-                Forms\Components\Select::make('type_of_innovation')
-                    ->label('Jenis Inovasi ')
-                    ->options([
-                        'digital' => 'Digital',
-                        'non-digital' => 'Non Digital'
-                    ])
-                    ->native(false)
-                    ->required(),
-                Forms\Components\Select::make('forms_of_regional_innovation')
-                    ->label('Bentuk Inovasi Daerah')
-                    ->options([
-                        'tata-kelola' => 'Tata Kelola Pemerintahan Daerah',
-                        'pelayanan-publik' => 'Pelayanan Publik',
-                        'bentuk-lainnya' => 'Bentuk Lainnya Sesuai Bidang Urusan Pemerintahan Yang Menjadi Kewenangan Daerah'
-                    ])
-                    ->native(false)
-                    ->required(),
-                Forms\Components\Select::make('thematic')
-                    ->label('Tematik')
-                    ->options([
-                        'digitalisasi-layanan-pemerintahan' => 'Digitalisasi Layanan Pemerintah',
-                        'penanggulangan-kemiskinan' => 'Penanggulangan Kemiskinan',
-                        'kemudahan-investasi' => 'Kemudahan Investasi',
-                        'prioritas-aktual-presiden' => 'Prioritas Aktual Presiden',
-                        'non-tematik' => 'Non Tematik',
-                    ])
-                    ->native(false)
-                    ->required(),
-                Forms\Components\DatePicker::make('trial_time')
-                    ->label('Waktu Uji Coba Inovasi Daerah')
-                    ->required(),
-                Forms\Components\DatePicker::make('implementation_time')
-                    ->label('Waktu Penerapan Inovasi Daerah')
-                    ->required(),
-                Forms\Components\Textarea::make('plan_wake')
-                    ->label('Rancang Bangun')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('goals')
-                    ->label('Tujuan Inovasi')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('benefits')
-                    ->label('Manfaat yang diperoleh')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('result')
-                    ->label('Hasil Inovasi')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('anggaran')
-                    ->label('Anggaran (jika ada)')
-                    ->collection('anggaran')
-                    ->acceptedFileTypes(['application/pdf']),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('profil-bisnis')
-                    ->label('Profil Bisnis (jika ada)')
-                    ->collection('profil-bisnis')
-                    ->acceptedFileTypes(['application/pdf']),
-            ]);
+        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
+
+    protected function handleRecordCreation(array $data): Model
+    {
+        $kriteria = Kriteria::with('hasKriteriaOptions')->get();
+
+        // Cek apakah kriteria tidak kosong
+        if ($kriteria->isEmpty()) {
+            // Jika kriteria kosong, batalkan pembuatan data dan beri log atau pesan kesalahan
+            Log::warning('Tidak ada data kriteria. Pembuatan form dibatalkan.');
+            return null;
+        }
+
+        foreach ($kriteria as $k) {
+            // Cek apakah ada opsi yang terkait dengan kriteria ini
+            if ($k->hasKriteriaOptions->isEmpty()) {
+                // Jika tidak ada opsi terkait, batalkan pembuatan data dan beri log atau pesan kesalahan
+                Log::warning("Kriteria ID {$k->id} tidak memiliki opsi terkait. Pembuatan form dibatalkan.");
+                return null;
+            }
+        }
+
+        $create = static::getModel()::create($data);
+
+        if ($create) {
+            try {
+                // Loop lagi untuk menyimpan data evaluasi
+                foreach ($kriteria as $k) {
+                    foreach ($k->hasKriteriaOptions as $option) {
+                        // Buat entri evaluasi untuk setiap opsi terkait
+                        Evaluasi::create([
+                            'user_id' => Auth::user()->id,
+                            'form_id' => $create->id,
+                            'kriteria_id' => $k->id,
+                            'kriteria_option_id' => $option->id,
+                        ]);
+                    }
+                }
+            } catch (Exception $e) {
+                // Tangkap kesalahan dan log pesan error
+                Log::error('Error saat membuat evaluasi: ' . $e->getMessage());
+
+                // Jika terjadi error, Anda bisa melempar exception atau mengembalikan pesan kesalahan
+                throw new Exception("Terjadi kesalahan saat menyimpan data evaluasi.");
+            }
+        }
+        return $create;
     }
 }

@@ -169,7 +169,8 @@ class InovasiPerangkatDaerahResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('Detail'),  
+                    ->label('Detail'),
+
 
             ])
             ->bulkActions([

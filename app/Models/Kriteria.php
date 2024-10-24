@@ -13,6 +13,6 @@ class Kriteria extends Model
 
     public function hasKriteriaOptions()
     {
-        return $this->hasOne(KriteriaOption::class);
+        return $this->hasMany(KriteriaOption::class);
     }
 }
