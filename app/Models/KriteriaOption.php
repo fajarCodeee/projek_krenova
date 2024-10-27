@@ -15,4 +15,9 @@ class KriteriaOption extends Model
     {
         return $this->belongsTo(Kriteria::class);
     }
+
+    public function hasEvaluasi()
+    {
+        return $this->hasMany(Evaluasi::class);
+    }
 }

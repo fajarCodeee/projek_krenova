@@ -3,6 +3,8 @@
 namespace App\Filament\Opd\Resources;
 
 use App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource\Pages;
+// use App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource\Pages;
+
 use App\Models\FormInovasiPerangkatDaerah;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -167,6 +169,7 @@ class FormInovasiPerangkatDaerahResource extends Resource
             'create' => Pages\CreateFormInovasiPerangkatDaerah::route('/create'),
             'edit' => Pages\EditFormInovasiPerangkatDaerah::route('/{record}/edit'),
             'indikator' => Pages\Indikator::route('/{record}/indikator'),
+            'form-indikator' => Pages\FormIndikator::route('/{record}/create-indikator')
         ];
     }
 }

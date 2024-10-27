@@ -23,4 +23,9 @@ class FormInovasiPerangkatDaerah extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
+
+    public function hasEvaluasi()
+    {
+        return $this->hasMany(Evaluasi::class);
+    }
 }

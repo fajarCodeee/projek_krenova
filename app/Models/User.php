@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(FormInovasiPerangkatDaerah::class);
     }
+
+    public function hasEvaluasi()
+    {
+        return $this->hasMany(Evaluasi::class);
+    }
 }
