@@ -106,7 +106,6 @@ class EditPenelitianDaerah extends EditRecord
                     ->required(),
                 Forms\Components\TextInput::make('information')
                     ->label('Keterangan')
-                    ->disabled()
                     ->maxLength(255),
                 Forms\Components\ViewField::make('pdf_preview')
                     ->label('Preview Surat Pernyataan')

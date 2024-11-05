@@ -171,6 +171,8 @@ return [
         App\Providers\Filament\OpdPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+        // Debugbar
+        Barryvdh\Debugbar\ServiceProvider::class,
     ])->toArray(),
 
     /*

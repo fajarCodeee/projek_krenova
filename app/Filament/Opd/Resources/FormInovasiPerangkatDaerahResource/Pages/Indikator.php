@@ -2,9 +2,11 @@
 
 namespace App\Filament\Opd\Resources\FormInovasiPerangkatDaerahResource\Pages;
 
+use stdClass;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Actions;
+use Livewire\Livewire;
 use App\Models\Evaluasi;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -28,10 +30,11 @@ class Indikator extends Page implements HasForms, HasTable
     protected $record;
     protected static string $resource = FormInovasiPerangkatDaerahResource::class;
     protected static string $view = 'filament.opd.resources.form-inovasi-perangkat-daerah-resource.pages.indikator';
-
+    protected $form_id;
 
     public function mount($record): void
     {
+        $this->form_id = $record;
         $this->record = FormInovasiPerangkatDaerah::findOrFail($record);
     }
 
@@ -44,30 +47,43 @@ class Indikator extends Page implements HasForms, HasTable
     public static function table(Table $table): Table
     {
         return $table
-        ->query(
-            \App\Models\Kriteria::query()->with('hasEvaluasi')
-        )
-        ->columns([
-            TextColumn::make('name')
-                ->label('Indikator'),
-            TextColumn::make('hasEvaluasi.kriteria_option.option_text')
-                ->label('Keterangan')
-                ->default('-'),
-            TextColumn::make('skor')
-                ->label('Skor')
-                ->default('0'),
+            ->query(
+                \App\Models\IndikatorOPD::query()->with('hasEvaluasi')
+            )
+            ->columns([
+                TextColumn::make('index')
+                    ->label('No.')
+                    ->state(
+                        static function (HasTable $livewire, stdClass $rowLoop): string {
+                            return (string) (
+                                $rowLoop->iteration +
+                                ($livewire->getTableRecordsPerPage() * (
+                                    $livewire->getTablePage() - 1
+                                ))
+                            );
+                        }
+                    ),
+                TextColumn::make('indikator')
+                    ->label('Indikator')
+                    ->searchable()
+                    ->wrap(),
+                TextColumn::make('hasEvaluasi.parameterOpd.parameter')
+                    ->label('Keterangan')
+                    ->default('-')
+                    ->wrap(),
+                TextColumn::make('hasEvaluasi.point')
+                    ->label('Skor')
+                    ->default('0'),
 
-        ])
-        ->actions([
-            Tables\Actions\Action::make('edit')
-                ->url(fn ($record) => route('filament.opd.resources.form-inovasi-perangkat-daerahs.form-indikator', $record->id))
-                ->label('Lihat'),
-        ])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
+            ])
+            ->actions([
+                Tables\Actions\Action::make('edit')
+                    ->url(fn($record) => route('filament.opd.resources.form-inovasi-perangkat-daerahs.form-indikator', [
+                        'record' => $record->id,
+                        'form_id' => request()->route('record')
+                    ]))
+                    ->label('Lihat'),
+            ])
+            ->paginated(false);
     }
-
 }

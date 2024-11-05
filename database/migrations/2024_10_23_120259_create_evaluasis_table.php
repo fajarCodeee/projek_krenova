@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignId('kriteria_option_id')
                 ->constrained('kriteria_options')
                 ->cascadeOnDelete();
+            $table->integer('point');
             $table->timestamps();
         });
     }

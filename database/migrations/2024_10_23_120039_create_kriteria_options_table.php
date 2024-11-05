@@ -17,7 +17,8 @@ return new class extends Migration
                 ->constrained('kriterias')
                 ->cascadeOnDelete();
             $table->text('option_text');
-            $table->integer('value');
+            $table->string('calc');
+            $table->integer('point');
             $table->timestamps();
         });
     }
